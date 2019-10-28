@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "ListEncad.h"
-#define debug if(0)
+#define debug if(1)
 struct element{
     struct student data;
     struct element *next;
@@ -33,11 +33,11 @@ int main()
 
     struct student aluno2;
     aluno2.registration = 123789;
-    strcpy(aluno1.name, "Pedro");
-    aluno1.n1 = 10.0;
-    aluno1.n2 = 10.0;
-    aluno1.n3 = 10.0;
-    aluno1.n4 = 10.0;
+    strcpy(aluno2.name, "Pedro");
+    aluno2.n1 = 10.0;
+    aluno2.n2 = 10.0;
+    aluno2.n3 = 10.0;
+    aluno2.n4 = 10.0;
 
     if(add_end(li, aluno2)){
         debug printf("Aluno adicionado com sucesso!\n");
@@ -48,7 +48,7 @@ int main()
     }
 
     struct student aluno3;
-    aluno3.registration = 123789;
+    aluno3.registration = 123780;
     strcpy(aluno3.name, "Joao");
     aluno3.n1 = 10.0;
     aluno3.n2 = 10.0;
@@ -63,9 +63,47 @@ int main()
         printf("Ocorreu um erro ao adicionar o aluno.\n");
     }
 
-    free_list(li);
-
     debug printf("Tamanho da lista depois do free: %d\n", sizeof_list(li));
+
+    // if(remove_middle(li, 123789)){
+    //     debug printf("Aluno removido com sucesso!\n");
+    //     debug printf("Tamanho atual da lista: %d\n", sizeof_list(li));
+    // }
+    // else{
+    //     printf("Ocorreu um erro ao remover o aluno.\n");
+    // }
+
+    // if(remove_end(li)){
+    //     debug printf("Aluno removido com sucesso!\n");
+    //     debug printf("Tamanho atual da lista: %d\n", sizeof_list(li));
+    // }
+    // else{
+    //     printf("Ocorreu um erro ao remover o aluno.\n");
+    // }
+
+    // if(remove_beginning(li)){
+    //     debug printf("Aluno removido com sucesso!\n");
+    //     debug printf("Tamanho atual da lista: %d\n", sizeof_list(li));
+    // }
+    // else{
+    //     printf("Ocorreu um erro ao remover o aluno.\n");
+    // }
+
+    struct student st_i_want;
+    if(select_list_position(li, 2, &st_i_want)){
+        debug printf("Aluno encontrado!\nNome: %s\nMatricula: %d\n", st_i_want.name, st_i_want.registration);
+    }
+    else{
+        debug printf("Aluno não encontrado.\n");
+    }
+
+    if(select_list_registration(li, 123780, &st_i_want)){
+        debug printf("Aluno encontrado!\nNome: %s\nMatricula: %d\n", st_i_want.name, st_i_want.registration);
+    }
+    else{
+        debug printf("Aluno não foi encontrado.\n");
+    }
+    free_list(li);
     return 0;
 }
 
@@ -176,3 +214,92 @@ int add_middle(List* li, struct student st)
     }
     return 1;
 }
+
+int remove_beginning(List* li)
+{
+    if(li == NULL || (*li) == NULL){//se lista não existir ou lista vazia, retorna 0
+        return 0;
+    }
+    else{
+        Element *no = *li;//cria elemento auxiliar que vai receber a lista
+        *li = no->next;//faz a cabeça apontar para o segundo elemento da lista
+        free(no);//remove o primeiro elemento
+        return 1;
+    }
+}
+
+int remove_end(List* li)
+{
+    if(li == NULL || (*li) == NULL){//se a lista não existir ou for vazia, retorna 0
+        return 0;
+    }
+    else{
+        Element *ant, *no = *li;
+        while(no->next != NULL){//enquanto o ponteiro do nó não apontar para null, ou seja, for o último
+            ant = no;//anterior virará o atual
+            no = no->next;//atual vai para o próximo
+        }
+        if(no == (*li)){//se o último nó for o primeiro item da lista, ou seja, lista só com um item
+            *li = no->next;
+        }
+        else{
+            ant->next = no->next;
+        }
+        free(no);
+        return 1;
+    }
+}
+
+int remove_middle(List* li, int student_registration)
+{
+    if(li == NULL) return 0; //se a lista não existir, retorne 0
+
+    Element *ant, *no = *li;
+    while(no != NULL && no->data.registration != student_registration){//enquanto não chegar no final da lista e não encontrar um aluno com o número informado
+        ant = no;//anterior é igual ao atual
+        no = no->next;//atual vai para o próximo
+    }
+    if(no == NULL) return 0;//aluno não encontrado
+
+    if(no == *li){//se for o primeiro item
+        *li = no->next;//cabeça aponta para o segundo item
+    }
+    else{
+        ant->next = no->next;//anterior apontará para o próximo
+    }
+    free(no);//libera o nó atual
+    return 1;
+}
+
+int select_list_position(List* li, int position, struct student *data)
+{
+    if(li == NULL || position <= 0) return 0;//se a lista e a posição não forem válidas, retorna erro
+    Element *no = *li;//cria auxiliar
+    int i = 0;
+
+    for(; no != NULL && i < position; i++){//enquanto não chegar no final da lista e não chegar na posição desejada
+        no = no->next;//pecorre a lista
+    }
+    if(no == NULL) return 0;//se chegar no final da lista, elemento não encontrado
+    else{
+        *data = no->data;//passa os dados para o auxiliar por referência
+        return 1;
+    }
+}
+
+int select_list_registration(List* li, int registration, struct student *data)
+{
+    if(li == NULL) return 0;//se a lista não existir, retorna erro
+    Element *no = *li;
+
+    while(no != NULL && no->data.registration != registration){//enquanto não chegar no final da lista e o dado informado for diferente do encontrado
+        no = no->next;//pecorre a lista
+    }
+
+    if(no == NULL) return 0;//se chegar no final e não encontrar, retorna 0
+    else{
+        *data = no->data;//passa os dados por referência
+        return 1;
+    }
+}
+
