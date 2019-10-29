@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "ListEncad.h"
+
 #define debug if(1)
 struct element{
     struct student data;
