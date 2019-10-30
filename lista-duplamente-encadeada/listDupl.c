@@ -72,6 +72,29 @@ int main(){
         printf("Ocorreu um erro ao adicionar o aluno.\n");
     }
 
+    if(remove_middle(li, 123789)){
+        debug printf("Aluno removido com sucesso!\n");
+        debug printf("Tamanho atual da lista: %d\n", sizeof_list(li));
+    }
+    else{
+        printf("Ocorreu um erro ao remover o aluno.\n");
+    }
+
+    if(remove_beginning(li)){
+        debug printf("Aluno removido com sucesso!\n");
+        debug printf("Tamanho atual da lista: %d\n", sizeof_list(li));
+    }
+    else{
+        printf("Ocorreu um erro ao remover o aluno.\n");
+    }
+    if(remove_end(li)){
+        debug printf("Aluno removido com sucesso!\n");
+        debug printf("Tamanho atual da lista: %d\n", sizeof_list(li));
+    }
+    else{
+        printf("Ocorreu um erro ao remover o aluno.\n");
+    }
+
     free_list(li);
     return 0;
 }
@@ -207,16 +230,57 @@ int add_middle(List* li, struct student st)
     return 1;//retorna sucesso
 }
 
-int remove_list(List *li)
+int remove_beginning(List *li)
 {
-    if(li == NULL) return 0;//se a lista não existir, retorna 0
+    if(li == NULL || empyt_list(li)) return 0;//se a lista não existir ou estiver vazia, retorna 0
 
-    if((*li) == NULL) return 0;//se a lista estiver vazia, retorna 0
+    Element *no = *li;//elemento auxiliar
+    *li = no->next;//cabeça da lista irá apontar para o próximo elemento
+    if(no->next != NULL){//se houver um único elemento na lista
+        no->next->previous = NULL;//lista fica vazia
+    }
+    free(no);//libera o nó
+    return 1;
+}
 
-    Element *no = *li;
-    *li = no->next;
-    if(no->next == NULL){
-        no->next->previous = NULL;
+int remove_end(List* li)
+{
+    if(li == NULL || empyt_list(li)) return 0;//se a lista não existir ou estiver vazia, retorne 0
+    Element *no = *li;//cria elemento auxiliar
+    while(no != NULL){//enquanto não chegar no final da lista
+        no = no->next;//passa para o próximo elemento
+    }
+
+    if(no->previous != NULL){
+        *li = no->next;
+    }
+    else{
+        no->previous->next = NULL;
+    }
+
+    free(no);
+    return 1;
+}
+
+int remove_middle(List* li, int registration)
+{
+    if(li == NULL) return 0;//se a lista não existir
+    
+    Element *no = *li;//cria novo elemento auxiliar
+    while(no != NULL && no->data.registration != registration){//enquanto não chegar no final da lista e a matrícula informada for diferente da na lista 
+        no = no->next;//pecorre a lista
+    }
+    if(no == NULL) return 0;//nó não econtrado
+    
+    if(no->previous == NULL){
+        *li = no->next;//se for o primeiro item o ponteiro para ponteiro apontará para null, esvaziando assim a lista
+    }
+
+    else{//se não for o primeiro item, faz a remoção no meio
+        no->previous->next = no->next;
+    }
+    if(no->next != NULL){
+        no->next->previous = no->previous;
     }
     free(no);
     return 1;

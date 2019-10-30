@@ -21,3 +21,7 @@ int add_end(List* li, struct student st);
 int add_middle(List* li, struct student st);
 
 int remove_beginning(List* li);
+
+int remove_end(List* li);
+
+int remove_middle(List* li, int registration);
