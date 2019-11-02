@@ -25,3 +25,7 @@ int remove_beginning(List* li);
 int remove_end(List* li);
 
 int remove_middle(List* li, int registration);
+
+int select_list_position(List* li, int position, struct student *st);
+
+int select_list_registration(List* li, int registration, struct student *st);

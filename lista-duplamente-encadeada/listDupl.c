@@ -72,29 +72,44 @@ int main(){
         printf("Ocorreu um erro ao adicionar o aluno.\n");
     }
 
-    if(remove_middle(li, 123789)){
-        debug printf("Aluno removido com sucesso!\n");
-        debug printf("Tamanho atual da lista: %d\n", sizeof_list(li));
+    // if(remove_middle(li, 123789)){
+    //     debug printf("Aluno removido com sucesso!\n");
+    //     debug printf("Tamanho atual da lista: %d\n", sizeof_list(li));
+    // }
+    // else{
+    //     printf("Ocorreu um erro ao remover o aluno.\n");
+    // }
+
+    // if(remove_beginning(li)){
+    //     debug printf("Aluno removido com sucesso!\n");
+    //     debug printf("Tamanho atual da lista: %d\n", sizeof_list(li));
+    // }
+    // else{
+    //     printf("Ocorreu um erro ao remover o aluno.\n");
+    // }
+    // if(remove_end(li)){
+    //     debug printf("Aluno removido com sucesso!\n");
+    //     debug printf("Tamanho atual da lista: %d\n", sizeof_list(li));
+    // }
+    // else{
+    //     printf("Ocorreu um erro ao remover o aluno.\n");
+    // }
+
+    struct student st_test;
+
+    if(select_list_position(li, 3, &st_test)){
+        debug printf("Aluno encontrado!\nNome: %s\nMatricula: %d\n", st_test.name, st_test.registration);
     }
     else{
-        printf("Ocorreu um erro ao remover o aluno.\n");
+        debug printf("Aluno não encontrado.\n");
     }
 
-    if(remove_beginning(li)){
-        debug printf("Aluno removido com sucesso!\n");
-        debug printf("Tamanho atual da lista: %d\n", sizeof_list(li));
+    if(select_list_registration(li, 123456, &st_test)){
+        debug printf("Aluno encontrado!\nNome: %s\nMatricula: %d\n", st_test.name, st_test.registration);
     }
     else{
-        printf("Ocorreu um erro ao remover o aluno.\n");
+        debug printf("Aluno não encontrado.\n");
     }
-    if(remove_end(li)){
-        debug printf("Aluno removido com sucesso!\n");
-        debug printf("Tamanho atual da lista: %d\n", sizeof_list(li));
-    }
-    else{
-        printf("Ocorreu um erro ao remover o aluno.\n");
-    }
-
     free_list(li);
     return 0;
 }
@@ -284,4 +299,39 @@ int remove_middle(List* li, int registration)
     }
     free(no);
     return 1;
+}
+
+int select_list_poisition(List* li, int position, struct student *st)
+{
+    if(li == NULL || position <= 0) return 0;//se a lista não exisitir ou posição inválida, retorna 0
+    int i = 1;
+    Element *no = *li;
+    while(no != NULL && i < position){//enquanto não chegar na posição desejada ou final da lista
+        no = no->next;//pecorre a lista
+        i++;
+    }
+    if(no == NULL){//se chegar no final da lista e não achar a posição, retorna 0
+        return 0;
+    }
+    else{
+        *st = no->data;
+        return i;
+    }
+}
+
+int select_list_registration(List* li, int registration, struct student *st)
+{
+    if(li == NULL) return 0;//se a lista não existir, retorna 0
+    Element *no = *li;
+    while(no != NULL && no->data.registration != registration)//enquanto não chegar no final da fila ou não encontrar um número de matrícula na lista
+    {
+        no = no->next;//pecorre a lista
+    }
+    if(no == NULL){//se chegar no final e não encontrar, retorna 0
+        return 0;
+    }
+    else{
+        *st = no->data;//se encontrar, retorna os dados do aluno encontrado
+        return 1;
+    }
 }
