@@ -117,26 +117,60 @@ void mergeSort(int *array, int begin, int end)
     }
 }
 
+//Quick Sort
+
+int partitionate(int *array, int begin, int end)
+{
+    int left, right, pivot, aux;
+    left = begin;
+    right = end;
+    pivot = array[begin];
+    while(left < right){
+        while(array[left] <= pivot){
+            left++;
+        }
+        while(array[right] > pivot){
+            right--;
+        }
+        if(left < right){
+            swap(&array[left], &array[right]);
+        }
+    }
+    array[begin] = array[right];
+    array[right] = pivot;
+    return right;
+}
+
+void quickSort(int *array, int begin, int end)
+{
+    int pivot;
+    if (begin < end){
+        pivot = partitionate(array, begin, end);
+        quickSort(array, begin, pivot - 1);
+        quickSort(array, pivot + 1, end);
+    }
+}
+
 int main()
 {
-    int array[10] = {10, 7, 9, 8, 3, 6, 4, 5, 2, 1}, i;
-    bubbleSort(0, array, 10);
+    int array[15] = {8, 10, 2, 1, 7, 6, 4, 5, 9, 3, 15, 14, 13, 12, 11}, i;
+    bubbleSort(0, array, 15);
     printf("----- Bubble Sort -----\n");
-    for(i = 0; i < 10; i++){
+    for(i = 0; i < 15; i++){
         printf("Posicao %d: %d\n", i, array[i]);
     }
 
-    int array2[10] = {10, 7, 9, 8, 3, 6, 4, 5, 2, 1};
-    insertionSort(array2, 10);
+    int array2[15] = {8, 10, 2, 1, 7, 6, 4, 5, 9, 3, 15, 14, 13, 12, 11};
+    insertionSort(array2, 15);
     printf("----- Insertion Sort -----\n");
-    for(i = 0; i < 10; i++){
+    for(i = 0; i < 15; i++){
         printf("Posicao %d: %d\n", i, array2[i]);
     }
 
-    int array3[10] = {8, 10, 2, 1, 7, 6, 4, 5, 9, 3};
-    selectionSort(array3, 10);
+    int array3[15] = {8, 10, 2, 1, 7, 6, 4, 5, 9, 3, 15, 14, 13, 12, 11};
+    selectionSort(array3, 15);
     printf("----- Selection Sort -----\n");
-    for(i = 0; i < 10; i++){
+    for(i = 0; i < 15; i++){
         printf("Posicao %d: %d\n", i, array3[i]);
     }
 
@@ -145,6 +179,13 @@ int main()
     printf("----- Merge Sort -----\n");
     for(i = 0; i < 15; i++){
         printf("Posicao %d: %d\n", i, array4[i]);
+    }
+
+    int array5[15] = {8, 10, 2, 1, 7, 6, 4, 5, 9, 3, 15, 14, 13, 12, 11};
+    quickSort(array4, 0, 14);
+    printf("----- Quick Sort -----\n");
+    for(i = 0; i < 15; i++){
+        printf("Posicao %d: %d\n", i, array[i]);
     }
     return 0;
 }
