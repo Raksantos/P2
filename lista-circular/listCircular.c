@@ -61,3 +61,205 @@ int empty_list(List* li)
         return 0;
     }
 }
+
+int add_beginning(List* li, struct student st)
+{
+    if(li == NULL) return 0;
+    Element *no = (Element*) malloc(sizeof(Element));
+
+    if(no == NULL) return 0;
+
+    no->data = st;
+
+    if((*li) == NULL){
+        *li = no;
+        no->next = no;
+    }else{
+        Element *aux = *li;
+        while(aux->next != (*li)){
+            aux = aux->next;
+        }
+        aux->next = no;
+        no->next = *li;
+        *li = no;
+    }
+    return 1;
+}
+
+int add_end(List* li, struct student st)
+{
+    if(li == NULL) return 0;
+
+    Element *no = (Element*) malloc(sizeof(Element));
+
+    if(no == NULL) return 0;
+
+    no->data = st;
+
+    if((*li) == NULL){
+        *li = no;
+        no->next = no;
+    }else{
+        Element *aux = *li;
+        while(aux->next != (*li)){
+            aux = aux->next;
+        }
+        aux->next = no;
+        no->next = *li;
+        *li = no;
+    }
+    return 1;
+}
+
+int add_ordered(List* li, struct student st)
+{
+    if(li == NULL) return 0;
+
+    Element *no = (Element*) malloc(sizeof(Element));
+
+    if(no == NULL) return 0;
+
+    no->data = st;
+
+    if((*li) == NULL){
+        *li = no;
+        no->next = no;
+    }else{
+        if((*li)->data.registration > st.registration){
+            Element *aux = *li;
+            while (aux->next != (*li))
+            {
+                aux = aux->next;
+                no->next = *li;
+                aux->next = no;
+                *li = no;
+                return 1;
+            }
+            Element *previous = *li, *current = (*li)->next;
+            while(current != (*li) && current->data.registration < st.registration){
+                previous = current;
+                current = current->next;
+            }
+
+            previous->next = no;
+            no->next = current;
+        }
+    }
+    return 1;
+}
+
+
+int remove_beginning(List* li)
+{
+    if(li == NULL) return 0;
+    if((*li) == NULL) return 0;
+
+    if((*li) == (*li)->next){
+        free(*li);
+        *li = NULL;
+        return 1;
+    }
+
+    Element *current = *li;
+
+    while(current->next != (*li)){
+        current = current->next;
+    }
+    Element *no = *li;
+    current->next = no->next;
+    *li = no->next;
+    free(no);
+    return 1;
+}
+
+int remove_end(List* li)
+{
+    if(li == NULL) return 0;
+    if((*li) == NULL) return 0;
+
+    if((*li) == (*li)->next){
+        free(*li);
+        *li = NULL;
+        return 1;
+    }
+    
+    Element *previous, *no = *li;
+    while(no->next != (*li)){
+        previous = no;
+        no = no->next;
+    }
+    previous->next = no->next;
+    free(no);
+    return 1;
+}
+
+int remove_middle(List* li, int registration)
+{
+    if(li == NULL) return 0;
+    if((*li) == NULL) return 0;
+
+    Element *no = *li;
+
+    if(no->data.registration == registration){
+        if(no == no->next){
+            free(no);
+            *li = NULL;
+            return 1;
+        }else{
+            Element *last = *li;
+            while(last->next != (*li)){
+                last = last->next;
+            }
+            last->next = (*li)->next;
+            *li = (*li)->next;
+            free(no);
+            return 1;
+        }
+    }
+
+    Element *previous = no;
+    no = no->next;
+
+    while(no != (*li) && no->data.registration != registration){
+        previous = no;
+        no = no->next;
+    }
+
+    if(no == *li) return 0;
+    previous->next = no->next;
+    free(no);
+    return 1;
+}
+
+int select_list_pos(List* li, int position, struct student *st)
+{
+    if(li == NULL || (*li) == NULL || position <= 0) return 0;
+
+    Element *no = *li;
+    int i = 1;
+    while(no->next != (*li) && i < position){
+        no = no->next;
+        i++;
+    }
+    if(i != position) return 0;
+    else{
+        *st = no->data;
+        return 1;
+    }
+}
+
+int select_list_registration(List* li, int registration, struct student *st)
+{
+    if(li == NULL || (*li) == NULL) return 0;
+
+    Element *no = *li;
+    while(no->next != (*li) && no->data.registration != registration){
+        no = no->next;
+    }
+
+    if(no->data.registration != registration) return 0;
+    else{
+        *st = no->data;
+        return 1;
+    }
+}
