@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "listCircular.h"
 #define debug if(1)
 
@@ -11,8 +12,54 @@ int main()
     }else{
         debug printf("A lista não está vazia!\n");
     }
+    debug printf("Tamanho atual da lista: %d\n", size_list(li));
 
-    printf("Tamanho atual da lista: %d\n", size_list(li));
+    struct student aluno1;
+    aluno1.registration = 123456;
+    strcpy(aluno1.name, "Rodrigo");
+    aluno1.n1 = 10.0;
+    aluno1.n2 = 10.0;
+    aluno1.n3 = 10.0;
+    aluno1.n4 = 10.0;
+
+    struct student aluno2;
+    aluno2.registration = 123789;
+    strcpy(aluno2.name, "Pedro");
+    aluno2.n1 = 10.0;
+    aluno2.n2 = 10.0;
+    aluno2.n3 = 10.0;
+    aluno2.n4 = 10.0;
+
+    struct student aluno3;
+    aluno3.registration = 123780;
+    strcpy(aluno3.name, "Joao");
+    aluno3.n1 = 10.0;
+    aluno3.n2 = 10.0;
+    aluno3.n3 = 10.0;
+    aluno3.n4 = 10.0;
+
+    if(add_beginning(li, aluno1)){
+        debug printf("Aluno adicionado com sucesso!\n");
+        debug printf("Tamanho atual da lista: %d\n", size_list(li));
+    }else{
+        debug printf("Houve um problema em inserir o aluno no inicio\n");
+    }
+
+    if(add_end(li, aluno2)){
+        debug printf("Aluno adicionado com sucesso!\n");
+        debug printf("Tamanho atual da lista: %d\n", size_list(li));
+    }else{
+        debug printf("Houve um problema em inserir o aluno no final\n");
+    }
+
+    if(add_ordered(li, aluno3)){
+        debug printf("Aluno adicionado com sucesso!\n");
+        debug printf("Tamanho atual da lista: %d\n", size_list(li));
+    }else{
+        debug printf("Houve um problema em inserir o aluno no meio\n");
+    }
+
+    
     free(li);
     return 0;
 }
@@ -46,10 +93,10 @@ int size_list(List* li)
     int count = 0;
     Element *no = *li;
 
-    while(no != (*li)){
+    do{
         count++;
         no = no->next;
-    }
+    }while(no != (*li));
     return count;
 }
 
