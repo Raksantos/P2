@@ -151,6 +151,42 @@ void quickSort(int *array, int begin, int end)
     }
 }
 
+//Heap Sort
+
+void createHeap(int *array, int begin, int end)
+{
+    int aux = array[begin];
+    int j = begin * 2 + 1;
+    while(j <= end){
+        if(j < end){
+            if(array[j] < array[j + 1]){
+                j++;
+            }
+        }
+        if(aux < array[j]){
+            array[begin] = array[j];
+            begin = j;
+            j = 2 * begin + 1;
+        }
+        else{
+            j = end + 1;
+        }
+    }
+    array[begin] = aux;
+}
+
+void heapSort(int *array, int size_array)
+{
+    int i;
+    for(i = (size_array-1)/2; i >= 0; i--){
+        createHeap(array, i, size_array - 1);
+    }
+    for(i = size_array - 1; i >= 1; i--){
+        swap(&array[0], &array[i]);
+        createHeap(array, 0, i - 1);
+    }
+}
+
 int main()
 {
     int array[15] = {8, 10, 2, 1, 7, 6, 4, 5, 9, 3, 15, 14, 13, 12, 11}, i;
@@ -182,10 +218,17 @@ int main()
     }
 
     int array5[15] = {8, 10, 2, 1, 7, 6, 4, 5, 9, 3, 15, 14, 13, 12, 11};
-    quickSort(array4, 0, 14);
+    quickSort(array5, 0, 14);
     printf("----- Quick Sort -----\n");
     for(i = 0; i < 15; i++){
-        printf("Posicao %d: %d\n", i, array[i]);
+        printf("Posicao %d: %d\n", i, array5[i]);
+    }
+
+    int array6[15] = {8, 10, 2, 1, 7, 6, 4, 5, 9, 3, 15, 14, 13, 12, 11};
+    heapSort(array6, 14);
+    printf("----- Heap Sort -----\n");
+    for(i = 0; i < 15; i++){
+        printf("Posicao %d: %d\n", i, array6[i]);
     }
     return 0;
 }
