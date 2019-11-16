@@ -87,3 +87,49 @@ int add_list_end(List* li, struct student st)
     li->size++;
     return 1;
 }
+
+int remove_begininng(List* li)
+{
+    if(li == NULL) return 0;
+
+    if(li->begin == NULL) return 0;
+
+    Element *no = li->begin;
+
+    li->begin = li->begin->next;
+    free(no);
+
+    if(li->begin == NULL){
+        li->end = NULL;
+    }
+
+    li->size--;
+    return 1;
+}
+
+int remove_end(List* li)
+{
+    if(li == NULL) return 0;
+
+    if(li->begin == NULL) return 0;
+
+    Element *previous, *no = li->begin;
+
+    while(no->next != NULL){
+        previous = no;
+        no->next = no;
+    }
+
+    if(no == li->begin)
+    {
+        li->begin = NULL;
+        li->end = NULL;
+    }
+    else{
+        previous->next = no->next;
+        li->end = previous;
+    }
+    free(no);
+    li->size--;
+    return 1;
+}

@@ -15,3 +15,7 @@ int size_list(List* li);
 int add_list_end(List* li, struct student st);
 
 int add_list_beginning(List* li, struct student st);
+
+int remove_begininng(List* li);
+
+int remove_end(List* li);
