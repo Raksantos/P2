@@ -4,6 +4,14 @@
 #include "listCircular.h"
 #define debug if(1)
 
+struct element{
+    struct student data;
+    struct element *next;
+};
+
+typedef struct element Element;
+
+
 int main()
 {
     List *li = init_list();
