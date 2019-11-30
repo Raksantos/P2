@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <search.h>
 
 int linear_search(int *array, int size_array, int element)
 {
