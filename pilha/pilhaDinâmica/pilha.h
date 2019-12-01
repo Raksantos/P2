@@ -4,7 +4,7 @@ struct student{
     double n1, n2, n3, n4;
 };
 
-typedef struct stack* Stack;
+typedef struct element* Stack;
 
 Stack* init_stack();
 
