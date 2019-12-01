@@ -4,3 +4,5 @@ algoritmos-ordenacao/ordination
 algoritmos-busca/search
 lista/lista-circular/listCircular
 lista/list-no-descrito/listDescritor
+pilha/pilhaEstatica/pilha
+pilha/pilhaDinamica/pilha
