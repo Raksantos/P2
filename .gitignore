@@ -6,3 +6,5 @@ lista/lista-circular/listCircular
 lista/list-no-descrito/listDescritor
 pilha/pilhaEstatica/pilha
 pilha/pilhaDinamica/pilha
+fila/filaEstatica/fila
+fila/filaDinamica/fila
