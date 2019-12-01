@@ -1,7 +1,7 @@
 struct student{
     int registration;
-    char nome[30];
-    double n1, n2, n3;
+    char name[30];
+    double n1, n2, n3, n4;
 };
 
 typedef struct stack Stack;
