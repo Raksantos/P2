@@ -2,12 +2,17 @@
 #include <stdlib.h>
 #include <string.h>
 #include "fila.h"
-#define MAX 100
+
+struct element{
+    struct student data;
+    struct element* next;
+};
 
 struct queue{
-    int begin, end, size;
-    struct student data[MAX];
+    struct element *begin, *end; 
 };
+
+typedef struct element Element;
 
 int main()
 {
@@ -65,69 +70,90 @@ int main()
 Queue* init_queue()
 {
     Queue *fi = (Queue*) malloc(sizeof(Queue));
+
     if(fi != NULL){
-        fi->begin = 0;
-        fi->end = 0;
-        fi->size = 0;
+        fi->begin = NULL;
+        fi->end = NULL;
     }
-    
+
     return fi;
 }
 
 void free_queue(Queue* fi)
 {
-    free(fi);
+    if(fi != NULL){
+        Element *no;
+        while(fi->begin != NULL){
+            no = fi->begin;
+            fi->begin = fi->begin->next;
+            free(no);
+        }
+        free(fi);
+    }
 }
 
 int size_queue(Queue* fi)
 {
-    if(fi == NULL) return -1;//retorna -1 porque se ela for nula, significa que houve problema na criação da lista e, por isso, é uma lista inválida
-     
-    return fi->size;
+    if(fi == NULL) return 0;
+
+    int cont = 0;
+    Element *no = fi->begin;
+    while(no != NULL){
+        cont++;
+        no = no->next;
+    }
+
+    return cont;
 }
 
 int full_queue(Queue* fi)
 {
-    if(fi == NULL) return -1;//retorna -1 porque se ela for nula, significa que houve problema na criação da lista e, por isso, é uma lista inválida
-
-    return fi->size == MAX ? 1 : 0;
+    return 0;
 }
 
 int empty_queue(Queue* fi)
 {
-    if(fi == NULL) return -1;
+    if(fi == NULL || fi->begin == NULL) return 1;
 
-    return fi->size == 0 ? 1 : 0;
+    return 0;
 }
 
 int add_queue(Queue* fi, struct student st)
 {
-    if(fi == NULL) return 0;
+    if(fi == NULL || full_queue(fi)) return 0;
 
-    if(full_queue(fi)) return 0;
+    Element* no = (Element*) malloc(sizeof(Element));
 
-    fi->data[fi->end] = st;
-    fi->end = (fi->end+1)%MAX;
-    fi->size++;
+    if(no == NULL) return 0;
 
+    no->data = st;
+    no->next = NULL;
+    
+    if(fi->end == NULL) {
+        fi->begin = no;
+    }else{
+        fi->end->next = no;
+        fi->end = no;
+    }
     return 1;
 }
 
 int remove_queue(Queue* fi)
 {
     if(fi == NULL || empty_queue(fi)) return 0;
+    Element *no = fi->begin;
+    fi->begin = fi->begin->next;
 
-    fi->begin = (fi->begin+1)%MAX;
-    fi->size--;
+    if(fi->begin == NULL) fi->end = NULL; //fila ficou vazia
 
+    free(no);
     return 1;
 }
 
-int select_queue(Queue* fi, struct student *st)
+int select_queue(Queue* fi, struct student *aux)
 {
     if(fi == NULL || empty_queue(fi)) return 0;
 
-    *st = fi->data[fi->begin];
-
+    *aux = fi->begin->data;
     return 1;
 }

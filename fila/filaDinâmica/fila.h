@@ -1,7 +1,7 @@
 struct student{
     int registration;
     char name[30];
-    float n1, n2, n3, n4;
+    double n1, n2, n3, n4;
 };
 
 typedef struct queue Queue;
@@ -16,8 +16,8 @@ int full_queue(Queue* fi);
 
 int empty_queue(Queue* fi);
 
-int add_queue(Queue* fi, struct student al);
+int add_queue(Queue* fi, struct student st);
 
 int remove_queue(Queue* fi);
 
-int select_queue(Queue* fi, struct student *st);
+int select_queue(Queue* fi, struct student *aux);
