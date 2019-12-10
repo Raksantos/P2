@@ -17,6 +17,11 @@ int empty_list(Element *head)
     return head->next == NULL ? 1 : 0; //se a lista estiver sem conteúdo ou apontando para nenhum canto, está vazia.
 }
 
+int empty_list2(List* li)
+{
+    return (li == NULL || *li == NULL) ? 1 : 0; //se a lista estiver sem conteúdo ou apontando para nenhum canto, está vazia.
+}
+
 void swap_nodes(Element *before, Element *first, Element *second)
 {
 	Element *temp = second->next;
@@ -69,10 +74,23 @@ int bubble_sort_iter(Element *head)
 	return sorted;
 }
 
-void bubble_sort_list(Element *head)
+void bubble_sort_list(Element *head, List *li)
 {
-	if(!empty_list(head))
+	if(!empty_list2(li))
 		while(bubble_sort_iter(head) > 0);
+    
+
+    Element *aux = head;
+
+    while(aux->next != NULL){
+        aux = aux->next;
+    }
+    if(head->num > aux->num){
+        aux->next = head;
+
+        *li = head->next;
+        head->next = NULL;
+    }
 }
 
 void swap(int *position1, int *position2)
@@ -173,14 +191,16 @@ int main()
     
     no = *list_aux;
 
-    bubble_sort_list(no);
+    bubble_sort_list(no, list_aux);
 
-    if(empty_list(no)){
+    Element *aux1 = *list_aux;
+
+    if(empty_list(aux1)){
         printf("VAZIO\n");
     }else{
-        while(no != NULL){
-            printf("%d\n", no->num);
-            no = no->next;
+        while(aux1 != NULL){
+            printf("%d\n", aux1->num);
+            aux1 = aux1->next;
         }
     }
 
