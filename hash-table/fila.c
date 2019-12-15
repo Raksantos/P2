@@ -3,75 +3,157 @@
 #include <string.h>
 #include "fila.h"
 
-struct queue_prio{
-    int qtd;
-    struct pacient data[MAX];
+struct element{
+    struct student data;
+    struct element* next;
 };
 
-QueuePrio* init_queue()
+struct queue{
+    struct element *begin, *end; 
+};
+
+typedef struct element Element;
+
+int main()
 {
-    QueuePrio *fi = (QueuePrio*) malloc(sizeof(QueuePrio));
-    if(fi != NULL){
-        fi->qtd = 0;
+    Queue *fi = init_queue();
+
+    struct student aluno1;
+    aluno1.registration = 123456;
+    strcpy(aluno1.name, "Rodrigo");
+    aluno1.n1 = 10.0;
+    aluno1.n2 = 10.0;
+    aluno1.n3 = 10.0;
+    aluno1.n4 = 10.0;
+
+    struct student aluno2;
+    aluno2.registration = 123789;
+    strcpy(aluno2.name, "Pedro");
+    aluno2.n1 = 10.0;
+    aluno2.n2 = 10.0;
+    aluno2.n3 = 10.0;
+    aluno2.n4 = 10.0;
+
+    struct student aluno3;
+    aluno3.registration = 123780;
+    strcpy(aluno3.name, "Joao");
+    aluno3.n1 = 10.0;
+    aluno3.n2 = 10.0;
+    aluno3.n3 = 10.0;
+    aluno3.n4 = 10.0;
+
+    struct student aux;
+
+    printf("Tamanho da fila ao iniciar: %d\n", size_queue(fi));
+
+    if(add_queue(fi, aluno1)){
+        printf("Aluno adicionado com sucesso! Tamanho da fila: %d\n", size_queue(fi));
+    }else{
+        printf("Houve um problema ao adicionar o aluno na fila\n");
     }
-    
+
+    if(select_queue(fi, &aux)){
+        printf("Aluno consultado com sucesso! Nome do aluno: %s\n", aux.name);
+    }else{
+        printf("Houve um problema ao consultar o aluno na fila\n");
+    }
+
+    if(remove_queue(fi)){
+        printf("Aluno removido com sucesso! Tamanho da fila: %d\n", size_queue(fi));
+    }else{
+        printf("Houve um problema ao remover o aluno na fila\n");
+    }
+    free_queue(fi);
+    return 0;
+}
+
+Queue* init_queue()
+{
+    Queue *fi = (Queue*) malloc(sizeof(Queue));
+
+    if(fi != NULL){
+        fi->begin = NULL;
+        fi->end = NULL;
+    }
+
     return fi;
 }
 
-void free_queue(QueuePrio* fi)
+void free_queue(Queue* fi)
 {
-    free(fi);
+    if(fi != NULL){
+        Element *no;
+        while(fi->begin != NULL){
+            no = fi->begin;
+            fi->begin = fi->begin->next;
+            free(no);
+        }
+        free(fi);
+    }
 }
 
-int size_queue(QueuePrio* fi)
-{
-    return fi->qtd;
-}
-
-int full_queue(QueuePrio* fi)
-{
-    if(fi == NULL) return -1;//retorna -1 porque se ela for nula, significa que houve problema na criação da lista e, por isso, é uma lista inválida
-
-    return fi->qtd == MAX ? 1 : 0;
-}
-
-int empty_queue(QueuePrio* fi)
-{
-    if(fi == NULL) return -1;
-
-    return fi->qtd == 0 ? 1 : 0;
-}
-
-int enqueue(QueuePrio* fi, char *name, int prio)
+int size_queue(Queue* fi)
 {
     if(fi == NULL) return 0;
-    if(full_queue(fi)) return 0;
 
-    int i = fi->qtd - 1;
-    while(i >= 0 && fi->data[i].prio >= prio){
-        fi->data[i+1] = fi->data[i];
-        i--;
+    int cont = 0;
+    Element *no = fi->begin;
+    while(no != NULL){
+        cont++;
+        no = no->next;
     }
 
-    strcpy(fi->data[i + 1].name, name);
-    fi->data[i+1].prio = prio;
-    fi->qtd++;
+    return cont;
+}
+
+int full_queue(Queue* fi)
+{
+    return 0;
+}
+
+int empty_queue(Queue* fi)
+{
+    if(fi == NULL || fi->begin == NULL) return 1;
+
+    return 0;
+}
+
+int enqueue(Queue* fi, struct student st)
+{
+    if(fi == NULL || full_queue(fi)) return 0;
+
+    Element* no = (Element*) malloc(sizeof(Element));
+
+    if(no == NULL) return 0;
+
+    no->data = st;
+    no->next = NULL;
+    
+    if(fi->end == NULL) {
+        fi->begin = no;
+    }else{
+        fi->end->next = no;
+        fi->end = no;
+    }
     return 1;
 }
 
-int dequeue(QueuePrio* fi)
+int dequeue(Queue* fi)
 {
-    if(fi == NULL || fi->qtd == 0) return 0;
+    if(fi == NULL || empty_queue(fi)) return 0;
+    Element *no = fi->begin;
+    fi->begin = fi->begin->next;
 
-    fi->qtd--;
+    if(fi->begin == NULL) fi->end = NULL; //fila ficou vazia
+
+    free(no);
     return 1;
 }
 
-int select_queue(QueuePrio* fi, char *name)
+int select_queue(Queue* fi, struct student *aux)
 {
-    if(fi == NULL || fi->qtd == 0) return 0;
+    if(fi == NULL || empty_queue(fi)) return 0;
 
-    strcpy(name, fi->data[fi->qtd-1].name);
-
+    *aux = fi->begin->data;
     return 1;
 }

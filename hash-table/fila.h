@@ -1,24 +1,23 @@
-#define MAX 100
-
-struct pacient{
+struct student{
+    int registration;
     char name[30];
-    int prio;
+    double n1, n2, n3, n4;
 };
 
-typedef struct queue_prio QueuePrio;
+typedef struct queue Queue;
 
-QueuePrio* init_queue();
+Queue* init_queue();
 
-void free_queue(QueuePrio* fi);
+void free_queue(Queue* fi);
 
-int size_queue(QueuePrio* fi);
+int size_queue(Queue* fi);
 
-int full_queue(QueuePrio* fi);
+int full_queue(Queue* fi);
 
-int empty_queue(QueuePrio* fi);
+int empty_queue(Queue* fi);
 
-int enqueue(QueuePrio* fi, char *name, int prio);
+int add_queue(Queue* fi, struct student st);
 
-int dequeue(QueuePrio* fi);
+int remove_queue(Queue* fi);
 
-int select_queue(QueuePrio* fi, char *name);
+int select_queue(Queue* fi, struct student *aux);

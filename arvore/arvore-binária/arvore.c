@@ -78,16 +78,16 @@ void preOrder(BT* bt)
 {
     if(!is_empty(bt)){
         printf("%d ", bt->item);
-        inOrder(bt->left);
-        inOrder(bt->right); 
+        preOrder(bt->left);
+        preOrder(bt->right); 
     }
 }
 
 void posOrder(BT* bt)
 {
     if(!is_empty(bt)){
-        inOrder(bt->left);
-        inOrder(bt->right); 
+        posOrder(bt->left);
+        posOrder(bt->right); 
         printf("%d ", bt->item);
     }
 }
