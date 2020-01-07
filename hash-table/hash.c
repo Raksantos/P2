@@ -50,3 +50,4 @@ void free_hash(Hash* ha)
         }
     }
 }
+

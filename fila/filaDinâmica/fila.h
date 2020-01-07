@@ -16,8 +16,8 @@ int full_queue(Queue* fi);
 
 int empty_queue(Queue* fi);
 
-int add_queue(Queue* fi, struct student st);
+int enqueue(Queue* fi, struct student st);
 
-int remove_queue(Queue* fi);
+int dequeue(Queue* fi);
 
 int select_queue(Queue* fi, struct student *aux);

@@ -1,4 +1,4 @@
-#define MAX 100
+#define MAX 1000
 
 struct pacient{
     char name[30];

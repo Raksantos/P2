@@ -3,7 +3,7 @@
 #include <string.h>
 
 struct element_list{
-    char num;
+    int num;
     struct element_list *next;
 };
 
@@ -74,10 +74,17 @@ int push(Stack* pi)
 void free_list(List* li)
 {
     if(li != NULL){//se a lista não estiver vazia
-        Element *no;//cria elemento auxiliar
+        Element *no = *li;//cria elemento auxiliar
+
+        printf("%d", no->num);
+
+        *li = (*li)->next;
+
+        free(no);
+
         while((*li) != NULL){//enquanto a lista não estiver vazia
             no = *li;//auxilar recebe o valor do nó
-            printf("%c", no->num);
+            printf(" %d", no->num);
             *li = (*li)->next;//cabeça da lista apontara para o próximo elemento
             free(no);//libera os dados do nó
         }
@@ -131,7 +138,7 @@ int sizeof_list(List* li)
     return count;
 }
 
-int add_end(List *li, char num)
+int add_end(List *li, int num)
 {
     if (li == NULL)return 0;
 
@@ -173,19 +180,21 @@ int remove_beginning(List* li)
 
 void nova_lista(Stack *pi)
 {
-    int i;
+    int i, entrNum;
 
     push(pi);
 
     List *li = init_list();
 
-    char entrada[500];
+    //fgets(entrada, 500, stdin);
 
-    fgets(entrada, 500, stdin);
+    char entrada = ' ';
 
-    for (i = 0; entrada[i] != '\n'; i++)
+    while(entrada != '\n')
     {
-        add_end(li, entrada[i]);
+        scanf("%d", &entrNum);
+        add_end(li, entrNum);
+        scanf("%c", &entrada);
     }
 
     (*pi)->list = li;

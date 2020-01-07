@@ -46,7 +46,7 @@ int main()
 
     printf("Tamanho da fila ao iniciar: %d\n", size_queue(fi));
 
-    if(add_queue(fi, aluno1)){
+    if(enqueue(fi, aluno1)){
         printf("Aluno adicionado com sucesso! Tamanho da fila: %d\n", size_queue(fi));
     }else{
         printf("Houve um problema ao adicionar o aluno na fila\n");
@@ -58,7 +58,7 @@ int main()
         printf("Houve um problema ao consultar o aluno na fila\n");
     }
 
-    if(remove_queue(fi)){
+    if(dequeue(fi)){
         printf("Aluno removido com sucesso! Tamanho da fila: %d\n", size_queue(fi));
     }else{
         printf("Houve um problema ao remover o aluno na fila\n");
