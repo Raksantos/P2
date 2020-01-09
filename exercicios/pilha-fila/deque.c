@@ -97,10 +97,6 @@ int main() {
 }
 
 
-
-
-
-
 deque_t* construct    ()
 {
     deque_t* deque = (deque_t*) malloc(sizeof(deque_t));
