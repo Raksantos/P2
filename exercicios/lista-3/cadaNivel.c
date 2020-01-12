@@ -1,248 +1,136 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
-struct binary_tree{
-    int item;
+struct binary_tree
+{
+	int item;
+	int lvl;
     int value;
-    struct binary_tree *left;
-    struct binary_tree *right;
+	struct binary_tree *right;
+	struct binary_tree *left;
 };
 
 typedef struct binary_tree BT;
 
-BT* create_empty_binary_tree();
+BT *create_tree(int item, BT *right, BT *left);
 
-BT* inite_bt(int item, BT* left, BT* right);
-
-BT* search(BT *bt, int item);
-
-int is_empty(BT* bt);
-
-void inOrder(BT* bt);
-
-void preOrder(BT* bt);
-
-void posOrder(BT* bt);
-
-BT* add(BT *bt, int item);
-
-BT* remove_node(BT *bt, int item);
-
-BT* remove_current(BT* current);
-
-void depth(BT *bt, int item, int *profundidade, int profDesejada, int min, int max);
-
-void cria_arvore(int n, BT* bt)
-{
-    if(n > 0){
-
-        int value, childleft, childright;
-
-        scanf("%d %d %d", &value, &childleft, &childright);
-
-        if(childleft == -1){
-            bt->left = NULL;
-        }
-
-        else if(childright == -1){
-            bt->right = NULL;
-        }
-
-        else if(childright == -1 && childleft == -1){
-            bt->right = NULL;
-            bt->left = NULL;
-        }
-
-        else{
-            bt->right->item = childright;
-            bt->left->item = childleft;
-        }
-
-        bt->value = value;
-
-        n--;
-        cria_arvore(n, bt);
-    }
-}
+int verifica(BT *root, int array[], int menor[], int cont);
 
 int main()
 {
-    int n;
-    scanf("%d", &n);
+	int cont, n1, n2, n3, i;
 
-    int value, childleft, childright;
+	scanf("%d", &cont);
+	
+	BT* array_nodes[cont];
 
-    scanf("%d %d %d", &value, &childleft, &childright);
+	for (i = 0; i < cont; i++)
+	{
+		scanf("%d %d %d\n", &n1, &n2, &n3);
 
-    BT *bt = inite_bt(0, NULL, NULL);
+		BT *root = create_tree(i, NULL, NULL);
+		BT *no1;
+		if(n2 != -1){
+            no1 = create_tree(n2, NULL, NULL);
+        }
+			
+		else{
+            no1 = NULL;
+        }
 
-    if(childleft == -1){
-        bt->left = NULL;
-    }
+		BT *no2;
+		if(n3 != -1){
+            no2 = create_tree(n3, NULL, NULL);
+        }
+		else{
+            no2 = NULL;
+        }
 
-    else if(childright == -1){
-        bt->right = NULL;
-    }
+		root->left = no1;
+		root->right = no2;
+		root->value = n1;
 
-    else if(childright == -1 && childleft == -1){
-        bt->right = NULL;
-        bt->left = NULL;
-    }
+		array_nodes[i] = root;
+	}
 
-    else{
-        bt->right->item = childright;
-        bt->left->item = childleft;
-    }
+	for (i = 0; i < cont; i++)
+	{
+		BT *node = array_nodes[i];
+		
+        int position;
 
-    bt->value = value;
+		if(node->left)
+		{
+			position = node->left->item;
+			node->left = array_nodes[position];
+		}
 
-    n--;
+		if(node->right)
+		{
+			position = node->right->item;
+			node->right = array_nodes[position];
+		}
 
-    cria_arvore(n, bt);
+	}
 
+	int tamanho = 200;
+	int maior[tamanho];
+	int menor[tamanho];
+
+	for (i = 0; i <tamanho; i++)
+	{
+		maior[i] = 0;
+	}
+
+	for (i = 0; i <tamanho; i++)
+	{
+		menor[i] = __INT16_MAX__;
+	}
+
+	int aux = verifica(array_nodes[0], maior, menor, 0);
+	
+	for (i = 0; i < aux; i++)
+	{
+		int biggest = maior[i];
+		int smallest = menor[i];
+		printf("Nivel %d: Maior = %d, Menor = %d\n", i + 1, biggest, smallest);
+	}
     return 0;
 }
 
-void depth(BT *bt, int item, int *profundidade, int profDesejada, int min, int max)
+BT *create_tree(int item, BT *left, BT *right)
 {
-    if(bt == NULL) return;
+	BT *bt = malloc(sizeof(BT));
+    
+	bt->item = item;
+	bt->right = right;
+	bt->left = left;
 
-    else{
-        if(*profundidade != profDesejada){
-            *profundidade += 1;
-            depth(bt->left, item, profundidade, profDesejada, min, max);
-            depth(bt->right, item, profundidade, profDesejada, min, max);
-            if(*profundidade != profDesejada) *profundidade -= 1;
-        }else{
-            depth(bt->left, item, profundidade, profDesejada, min, max);
-            depth(bt->right, item, profundidade, profDesejada, min, max);
-        }
-    }
+	return bt;
 }
 
-BT* create_empty_binary_tree()
+int verifica(BT *root, int array[], int menor[], int cont)
 {
-    return NULL;
-}
+	if(root == NULL)
+	{
+		return cont;
+	}
 
-BT* inite_bt(int item, BT* left, BT* right)
-{
-    BT* bt = (BT*) malloc(sizeof(BT));
+	root->lvl = cont;
 
-    bt->item = item;
-    bt->right = right;
-    bt->left = left;
+	if(root->value > array[cont])
+	{
+		array[cont] = root->value;
+	}
 
-    return bt;
-}
+	if(root->value < menor[cont])
+	{
+		menor[cont] = root->value;
+	}
 
-BT* search(BT *bt, int item)
-{
-    if((bt == NULL) || (bt->item == item)) return bt;
+	int value1 = verifica(root->left, array, menor, cont + 1);
+	int value2 = verifica(root->right, array, menor, cont + 1);
 
-    else if(bt->item > item){
-        return search(bt->left, item);
-    }
-    else{
-        return search(bt->right, item);
-    }
-}
-
-int is_empty(BT* bt)
-{
-    return bt == NULL ? 1 : 0;
-}
-
-void inOrder(BT* bt)
-{
-    if(!is_empty(bt)){
-        inOrder(bt->left);
-        printf("%d ", bt->item);
-        inOrder(bt->right); 
-    }
-}
-
-void preOrder(BT* bt)
-{
-    if(!is_empty(bt)){
-        printf("%d ", bt->item);
-        preOrder(bt->left);
-        preOrder(bt->right); 
-    }
-}
-
-void posOrder(BT* bt)
-{
-    if(!is_empty(bt)){
-        posOrder(bt->left);
-        posOrder(bt->right); 
-        printf("%d ", bt->item);
-    }
-}
-
-BT* add(BT *bt, int item)
-{
-    if(is_empty(bt)) bt = inite_bt(item, NULL, NULL);
-
-    else if(bt->item > item) bt->left = add(bt->left, item);
-
-    else bt->right = add(bt->right, item);
-
-    return bt;
-}
-
-BT* remove_node(BT *bt, int item)
-{
-    if(is_empty(bt)){
-        printf("A arvore ja esta vazia\n");
-        return NULL;
-    }
-
-    struct binary_tree *previous = NULL;
-    struct binary_tree *current = bt;
-
-   while(current != NULL){
-       if(item == current->item){
-           if(current == bt) bt = remove_current(current);
-
-           else{
-                if(previous->right == current)
-                    previous->right = remove_current(current);
-                else
-                    previous->left = remove_current(current);
-           }
-       }
-       previous = current;
-       if(item > current->item)
-          current = current->right;
-        else
-            current = current->left;
-   } 
-}
-
-BT* remove_current(BT* current)
-{
-    BT *no1, *no2;
-    if(current->left == NULL){
-        no2 = current->right;
-        free(current);
-        return no2;
-    }
-    no1 = current;
-    no2 = current->left;
-
-    while(no2->right != NULL){
-        no1 = no2;
-        no2 = no2->right;
-    }
-
-    if(no1 != current){
-        no1->right = no2->left;
-        no2->left = current->left;
-    }
-
-    no2->right = current->right;
-    free(current);
-
-    return no2;
+	return value1 > value2 ? value1 : value2;
 }
